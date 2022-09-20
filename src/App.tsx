@@ -73,24 +73,60 @@ function App() {
     }
   };
 
+  /**
+   * @description prompts user to disconnect wallet if it exists.
+   * This function is called when the disconnect wallet button is clicked
+   */
+  const disconnectWallet = async () => {
+    // @ts-ignore
+    const { solana } = window;
+
+    if (solana) {
+      try {
+        await solana.disconnect();
+        setWalletKey(undefined);
+        console.log('Disconnect Your Wallet!');
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <h2>Connect to Phantom Wallet</h2>
-        {provider && !walletKey && (
-          <button
-            style={{
-              fontSize: '16px',
-              padding: '15px',
-              fontWeight: 'bold',
-              borderRadius: '5px',
-            }}
-            onClick={connectWallet}
-          >
-            Connect Wallet
-          </button>
+      <header className="App-header" style={{ justifyContent: 'normal' }}>
+        <div style={{ marginTop: 16, marginLeft: '90vw' }}>
+          {provider && !walletKey && (
+            <button
+              style={{
+                fontSize: '16px',
+                padding: '15px',
+                fontWeight: 'bold',
+                borderRadius: '5px',
+              }}
+              onClick={connectWallet}
+            >
+              Connect Wallet
+            </button>
+          )}
+          {provider && walletKey && (
+            <button
+              style={{
+                fontSize: '16px',
+                padding: '15px',
+                fontWeight: 'bold',
+                borderRadius: '5px',
+              }}
+              onClick={disconnectWallet}
+            >
+              Disconnect
+            </button>
+          )}
+        </div>
+        <h2 style={{ marginTop: '35vh' }}>Connect to Phantom Wallet</h2>
+        {provider && walletKey && (
+          <p style={{ fontSize: 16 }}>Current Address: {walletKey as any}</p>
         )}
-        {provider && walletKey && <p>Connected account</p>}
 
         {!provider && (
           <p>
